@@ -1,0 +1,46 @@
+# CIVE601TermProjectMatlabCode
+MATLAB code utilised in CIV E 601 term project in Group 6
+
+Discription of variables in dataset1.1.mat:
+availability: a 1*8 row vector representing the availability working days of 8 crews.
+date_ready: a 85*1 column vector representing the ready (preproduced) date of each activity.
+deadline: a 85*1 column vector representing the due (preproduced) date of each activity.
+duration: a 85*1 column vector representing the duration of each activity.
+info: a 85*7 matrix recording Project No, Site ID, Duration, Date Ready, Deadline, PPI, WPIS of each activity.
+WPIS: a 85*1 column vector representing the WPIS value of each activity.
+
+
+Since the built-in solver intlinprog() is designed for a specific vector variable, transformation is required on all variables defined in Methodologies:
+The variable to be input into the MATLAB solver will have a size of 1*10880, comprising columns of X_1, X_2,...,X_8 in order, along with columns of G_1, ..., G_8 in order.
+More specifically, the variable's 1st 15 elements come from the 1st column in X_1, representing Crew 1's schedule on Project 1 during 15 days;
+the 2nd 15 elements come from the 2nd column in X_1, representing Crew 1's schedule on Project 2 during 15 days;
+the 86th 15 elements come from the 1st column in X_2, representing Crew 2's schedule on Project 1 during 15 days;
+the (85*15*8+5)th element comes from the 5th element in G_1, denoting whether Crew 1 performs Project 5;
+the (85*15*8+15*8)th, i.e. 10880th, element comes from the 85th element in G_8, denoting whether Crew 8 performs Project 85.
+
+Discription of Question1.m:
+In this mfile, codes are utilized for solving Question 1. 
+It is splitted into several sections:
+In Model Constraints Setup Section:
+-intcon: integer constraint
+-A and b: Inequality constraints
+-Aeq and beq: Equation constraints
+-lb and up: lower bound and upper bound of variables
+In Utilizing problem solver Section:
+-if the objective function is the first, the optimal solution can be directly obtained;
+-if the objective function is the second: we will limit the max no of nodes to 20,000.
+In Transformation Section:
+-result: work schedule of each crew during 15 working days
+-Note that the projects scheduled in result obtained from MATLAB is not continuously performed. However, by rescheduling manually within corresponding availabile time frames, the equivalence will not change.
+
+Discription of Question3.m:
+In this mfile, codes are utilized for solving Question 3. 
+The structure is generally similar to that in Question1.m
+Differences appear in the second section:
+-Project 86 is added as an emergency;
+-All crews' availability excluding Crew 2's and Crew 5's will be 0, which makes these two crews rescheduled only;
+-The weight (WPIS) of Project 86 are set to 10, a large number, ensuring it to be scheduled;
+-Projects performed by other 6 crews, and projects performed by Crew 2 or Crew 5 during the first 5 days, are set to have 0 WPIS, which means they will not to be scheduled;
+-Project 86 will be available on 6th and 7th days only.
+
+
